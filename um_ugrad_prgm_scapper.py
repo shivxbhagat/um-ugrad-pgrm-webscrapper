@@ -6,6 +6,7 @@
 #3. Must Review all the tables generated in the doc, thee are some issues with the tables in formatting and paragraph inside the table
 #4. Has to manually type Faculty/college/school name in the doc on the top of the program
 #5. Nested Unordered is generated twice, need to remove one of them
+#6. By default, "On this page" and "Application Deadlines" are added, need to remove them manually as per the requirement
 
 import subprocess
 import sys
