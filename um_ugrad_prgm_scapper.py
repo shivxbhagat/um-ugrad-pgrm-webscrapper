@@ -8,6 +8,10 @@
 #5. Nested Unordered is generated twice, need to remove one of them
 #6. By default, "On this page" and "Application Deadlines" are added, need to remove them manually as per the requirement
 
+# to run the script, open terminal and run the command: 
+# python3 um_ugrad_prgm_scapper.py > debug.txt
+# this will save the debug logs in the debug.txt file, fing for "------------------------------------------------------------" to see if any element is skipped
+
 import subprocess
 import sys
 
