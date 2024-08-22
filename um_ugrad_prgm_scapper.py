@@ -1,5 +1,11 @@
 #coded by: Shiv Bhagat
 
+#notes: 
+#1. This script is not able to extract images from the elements, need to manually add images to the doc
+#2. Ordered list numbering is not resetting, need to manually reset the numbering while checking the doc
+#3. Must Review all the tables generated in the doc, thee are some issues with the tables in formatting and paragraph inside the table
+#4. Has to manually type Faculty/college/school name in the doc on the top of the program
+
 import subprocess
 import sys
 
@@ -30,24 +36,47 @@ def add_element_to_doc(doc, element):
     print(f"Processing element: {element.name} with class: {element.get('class')}")
     
     if element.name == 'p':
+
         if element.get('class') == ['notification']:
             text = "Notification(i): " + element.get_text()
             doc.add_paragraph(text)
         else: 
-            doc.add_paragraph(element.get_text())
+            #if para has link in the text then add link to the doc
+            linkP = element.find('a')
+            if linkP:
+                doc.add_paragraph(element.get_text(), style='Normal').add_run(f" ({linkP['href']})")
+            else:
+                doc.add_paragraph(element.get_text(), style='Normal')
+
     
     elif element.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
         doc.add_heading(element.get_text(), level=int(element.name[1]))
     
     elif element.name == 'ul':
         for li in element.find_all('li'):
-            doc.add_paragraph(li.get_text(), style='List Bullet')
+            link = li.find('a')
+            if link:
+                doc.add_paragraph(link.get_text(), style='List Bullet').add_run(f" ({link['href']})")
+            else: 
+                doc.add_paragraph(li.get_text(), style='List Bullet')
     
     elif element.name == 'ol':
         for li in element.find_all('li'):
-            doc.add_paragraph(li.get_text(), style='List Number')
+            linkO = li.find('a')
+            if linkO:
+                doc.add_paragraph(linkO.get_text(), style='List Number').add_run(f" ({linkO['href']})")
+            else:
+                doc.add_paragraph(li.get_text(), style='List Number')
     
     elif element.name == 'table':
+
+        #if there is Caption and heading in table
+        caption = element.find('caption')
+        if caption:
+            doc.add_paragraph(caption.get_text())
+
+        # Add table to the document
+
         print("Adding table")
         rows = element.find_all('tr')
         cols = rows[0].find_all(['th', 'td'])
@@ -93,12 +122,11 @@ def add_element_to_doc(doc, element):
         print(f"Adding link: {element.get_text()} ({element['href']})")
         doc.add_paragraph(f"Link: {element.get_text()} ({element['href']})")
     
-    elif element.name == 'div' or element.name == 'section' or element.name == 'article' or element.name == 'main' or element.name == 'span':
+    elif element.name == 'div' or element.name == 'section' or element.name == 'article' or element.name == 'main':
         print(f"Processing div/section/article element")
         for child in element.children:
             if child.name:
                 add_element_to_doc(doc, child)  # Recursively process children of the div
-
 
     else: 
         print(f"Skipping element: {element.name} with class: {element.get('class')} and text: {element.get_text()}")
@@ -129,6 +157,22 @@ def process_url(url):
         doc.add_heading(heading.get_text().strip(), level=1).paragraph_format.alignment = 1
     headingText = heading.get_text().strip()
 
+    #remove (2024-2025) from the heading
+    headingText = headingText.split('(')[0]
+
+    #remove special characters from the heading
+    headingText = headingText.replace(":", "")
+    headingText = headingText.replace("?", "")
+    headingText = headingText.replace("/", "")
+    headingText = headingText.replace("\\", "")
+    headingText = headingText.replace("*", "")
+    headingText = headingText.replace("<", "")
+    headingText = headingText.replace(">", "")
+    headingText = headingText.replace("|", "")
+    headingText = headingText.replace("-", "")
+
+
+
     # Process specific section
     section = soup.find('div', class_='js-hero-container')
     if section:
@@ -148,10 +192,7 @@ def process_url(url):
 urlsTest = [
     #test urls
      "https://umanitoba.ca/explore/undergraduate-admissions/requirements/law",
-    #"https://umanitoba.ca/explore/undergraduate-admissions/requirements/business-track",
-   #"https://umanitoba.ca/explore/undergraduate-admissions/requirements/environmental-design",
-   "https://umanitoba.ca/explore/undergraduate-admissions/requirements/direct-entry"
-
+   
 ]
 
 # List of URLs to process
@@ -250,7 +291,7 @@ urls = [
 ]
 
 # Process each URL
-for url in urlsTest:
+for url in urls:
     print(f"Processing URL: {url}")
     process_url(url)
 
