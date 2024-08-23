@@ -7,6 +7,7 @@
 #4. Has to manually type Faculty/college/school name in the doc on the top of the program
 #5. Nested Unordered is generated twice, need to remove one of them
 #6. By default, "On this page" and "Application Deadlines" are added, need to remove them manually as per the requirement
+#7. Sometimes, with in page links, like that of "#Section-1", its not taking text related to it into account, need to manually add them, mostly happens in top 1-3 sections with "Notes" and "Academic Requirements" sections - for sure there in section 6 3rd point. Or the section's link is in the last sentence.
 
 # to run the script, open terminal and run the command: 
 # ~ git clone https://github.com/shivxbhagat/um-ugrad-pgrm-webscrapper.git
