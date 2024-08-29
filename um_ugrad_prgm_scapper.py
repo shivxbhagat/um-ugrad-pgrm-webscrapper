@@ -8,6 +8,7 @@
 #5. Nested Unordered is generated twice, need to remove one of them
 #6. By default, "On this page" and "Application Deadlines" are added, need to remove them manually as per the requirement
 #7. Sometimes, with in page links, like that of "#Section-1", its not taking text related to it into account, need to manually add them, mostly happens in top 1-3 sections with "Notes" and "Academic Requirements" sections - for sure there in section 6 3rd point. Or the section's link is in the last sentence.
+#8. There is separate function for English Language Proficiency, need to run that separately
 
 # to run the script, open terminal and run the command: 
 # ~ git clone https://github.com/shivxbhagat/um-ugrad-pgrm-webscrapper.git
@@ -200,7 +201,6 @@ def process_url(url):
 
 urlsTest = [
     #test urls
-     "https://umanitoba.ca/explore/undergraduate-admissions/requirements/law",
    
 ]
 
@@ -299,8 +299,47 @@ urls = [
     #can add more urls
 ]
 
+#for English Language Proficiency
+elpUrl = "https://umanitoba.ca/admissions/undergraduate/requirements/english-language-proficiency"
+def elpExtract (elpUrl):
+    response = requests.get(elpUrl)
+    html_content = response.content
+    soup = BeautifulSoup(html_content, "html.parser")
+    
+    # Create a new Word document for this URL
+    doc = Document()
+
+    # Change the page margins
+    sections = doc.sections
+    for section in sections:
+        section.top_margin = Inches(0.5)
+        section.bottom_margin = Inches(0.5)
+        section.left_margin = Inches(0.5)
+        section.right_margin = Inches(0.5)
+
+
+
+    # Process specific section
+    section = soup.find('div', class_='content')
+    if section:
+        add_element_to_doc(doc, section)
+    else:
+        print(f"-------- Section with class 'content' not found in {elpUrl} -------- ")
+
+    # doc_name
+    doc_name = f"English_Language_Proficiency.docx"
+
+    # Save the Word document
+    doc.save(doc_name)
+
+    print(f"Document saved as: {doc_name}")
+
+# Process English Language Proficiency
+elpExtract(elpUrl)
+
+
 # Process each URL
-for url in urls:
+for url in urlsTest:
     print(f"Processing URL: {url}")
     process_url(url)
 
