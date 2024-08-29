@@ -299,7 +299,7 @@ urls = [
     #can add more urls
 ]
 
-#for English Language Proficiency
+#for English Language Proficiency (ELP)
 elpUrl = "https://umanitoba.ca/admissions/undergraduate/requirements/english-language-proficiency"
 def elpExtract (elpUrl):
     response = requests.get(elpUrl)
