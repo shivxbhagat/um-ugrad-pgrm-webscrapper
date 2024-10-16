@@ -14,7 +14,7 @@
 # ~ git clone https://github.com/shivxbhagat/um-ugrad-pgrm-webscrapper.git
 # ~ cd um-ugrad-pgrm-webscrapper
 # ~ python3 um_ugrad_prgm_scapper.py > debug.txt
-# this will save the debug logs in the debug.txt file, fing for "------------------------------------------------------------" to see if any element is skipped with text in it
+# this will save the debug logs in the debug.txt file, find for "------------------------------------------------------------" to see if any element is skipped with text in it
 
 import subprocess
 import sys
